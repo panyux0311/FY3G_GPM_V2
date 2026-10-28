@@ -51,7 +51,7 @@ python -m processing.statistics /lixj/pyx/dataset/FY3G_after
 
 # 2. 运行新实验
 cd E:/2026Code/FY3G_GPM_V2
-python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+python scripts/train.py --config configs/gpm_surface_v3.yaml
 ```
 
 ## 文档维护

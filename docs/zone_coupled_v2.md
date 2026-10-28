@@ -1,6 +1,6 @@
 # 区域感知、多时效降水训练流程
 
-本说明对应 `configs/simvpv2_zone_coupled_v2.yaml`。旧 YAML 不设置新增选项时，仍采用旧单帧解码、硬门控、均匀拼接和全区域宏平均选模，以便继续评估旧 checkpoint。
+本说明对应 `configs/gpm_surface_v4.yaml`。旧 YAML 不设置新增选项时，仍采用旧单帧解码、硬门控、均匀拼接和全区域宏平均选模，以便继续评估旧 checkpoint。
 
 ## 数据如何进入训练
 
@@ -108,20 +108,20 @@ rate = expm1(p * log1p(ungated_amount))    if p >= threshold[lead,zone]
 
 ```bash
 # 真实数据 CPU 单样本预检
-python scripts/preflight.py --config configs/simvpv2_zone_coupled_v2.yaml
+python scripts/preflight.py --config configs/gpm_surface_v4.yaml
 
 # 从头训练；先根据服务器实际位置修改 YAML 的 dataset_root
-python scripts/train.py --config configs/simvpv2_zone_coupled_v2.yaml
+python scripts/train.py --config configs/gpm_surface_v4.yaml
 
 # 本次实验断点续训，需保留对应目录下的最佳权重
-python scripts/train.py --config configs/simvpv2_zone_coupled_v2.yaml --resume outputs/gpm_surface_zone_coupled_v2/checkpoints/last_resume.pt
+python scripts/train.py --config configs/gpm_surface_v4.yaml --resume outputs/gpm_surface_v4/checkpoints/last_resume.pt
 
 # 最终测试与个例可视化，沿用验证时冻结的阈值
-python scripts/finalize.py --config configs/simvpv2_zone_coupled_v2.yaml --cases 3
+python scripts/finalize.py --config configs/gpm_surface_v4.yaml --cases 3
 
 python run_tests.py
 ```
 
-输出目录为 `outputs/gpm_surface_zone_coupled_v2`。新增 head 和 skip 改变了模型结构，必须从头启动这个新实验；旧实验继续使用其原 YAML 加载旧 checkpoint。恢复训练时会校验模型新增选项、数据 manifest、选模区域、背景保留比例和权重策略，避免混用不同实验分数或结构。
+输出目录为 `outputs/gpm_surface_v4`。新增 head 和 skip 改变了模型结构，必须从头启动这个新实验；旧实验继续使用其原 YAML 加载旧 checkpoint。恢复训练时会校验模型新增选项、数据 manifest、选模区域、背景保留比例和权重策略，避免混用不同实验分数或结构。
 
 代码验证覆盖新旧配置、实际旧 checkpoint 严格加载、分时效特征、掩码融合、Hann 数值、区域损失梯度、强雨正例权重、严格 FAR 回退、宏/微平均与两轮合成数据训练。真实数据单样本预检不能证明泛化改善；仍需完成新的 25 轮实验，按相同评估口径比较 CSI@0.1/2/5、全图 pooled MAE 和原三个案例。MAE≤0.28、虚警减少及雨带演变改善是实验验收目标，不是代码修改能够保证的结果。Hann 只能缓解重叠 patch 的接缝，不能保证所有空间伪影都消失。

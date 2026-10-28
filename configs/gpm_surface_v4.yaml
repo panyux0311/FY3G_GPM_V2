@@ -1,5 +1,5 @@
 config:
-  name: gpm_surface_v1
+  name: gpm_surface_v4
 
 data:
   dataset_root: /lixj/pyx/dataset/FY3G_after
@@ -9,7 +9,7 @@ data:
   patch_size: 64
 
 model:
-  architecture: simvpv2  # options: unet_standard, simvpv2
+  architecture: simvpv2
   input_channels: 43
   input_steps: 3
   forecast_leads: 3
@@ -26,18 +26,25 @@ model:
   simvpv2_temporal_layers: 4
   simvpv2_mlp_ratio: 4.0
   simvpv2_drop_path: 0.0
+  # Preserve all three latent forecast planes and mask-aware input skips.
+  simvpv2_multi_lead: true
+  exceedance_head_enabled: true
+  rain_gate_mode: expected_log
+  patch_blend_mode: hann
+  patch_blend_min_weight: 0.05
 
 train:
-  experiment_group: improved_100
+  experiment_group: gpm_surface_v4
   seed: 14
-  epochs: 100
+  # Adjusted: Short cosine schedule matching actual training duration
+  epochs: 25
+  warmup_epochs: 5
   effective_batch_size: 64
   microbatch_size: 64
   num_workers: 2
   prefetch_factor: 1
-  peak_learning_rate: 0.0002
+  peak_learning_rate: 0.0001
   final_learning_rate: 0.000005
-  warmup_epochs: 5
   weight_decay: 0.0001
   grad_clip: 1.0
   rain_threshold_mm_h: 0.1
@@ -55,14 +62,35 @@ train:
   hard_negative_fraction: 0.02
   hard_negative_weight: 0.02
   hard_negative_ramp_start_epoch: 21
-  hard_negative_ramp_end_epoch: 60
+  hard_negative_ramp_end_epoch: 25
   ema_decay: 0.999
   device: cuda
   amp_dtype: bfloat16
   validation_far_max: 0.90
+  validation_far_max_by_zone: [0.75, 0.70, 0.55]
+  zone_loss_weights: [1.0, 0.7, 0.05]
+  expected_amount_weight: 0.25
+  dry_probability_weighted: true
+  exceedance_positive_weighting: true
+  exceedance_positive_weight_cap: 25.0
+  primary_selection_domain: observable
+  # Train only: scan processed targets once, keep all covered/rainy patches.
+  uncovered_patch_keep_ratio: 0.25
   threshold_min: 0.05
   threshold_max: 0.99
   threshold_step: 0.01
   threshold_pod_retention: 0.0
   quality_gate_enabled: false
-  output_dir: outputs/gpm_surface_v1
+  early_stopping_enabled: true
+  early_stopping_patience: 10
+  early_stopping_min_delta: 0.001
+  diagnostics_enabled: true
+  diagnostics_train_forecast_times: 8
+  # Reduced: Only run full diagnostics every 5 epochs to save time
+  diagnostics_every_epochs: 5
+  diagnostics_probability_threshold: 0.5
+  diagnostics_compare_raw_ema: true
+  # Derive weights at startup from the existing statistics/group_count; do not scan the dataset.
+  intensity_weight_strategy: sqrt_inverse_frequency_v1
+  save_best_by_metrics: ["csi_0.1", "csi_2", "csi_5"]
+  output_dir: outputs/gpm_surface_v4

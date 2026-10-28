@@ -14,6 +14,19 @@ python -m pip install -e .
 
 依赖声明见 [pyproject.toml](pyproject.toml)。项目支持 `simvpv2` 与 `unet_standard` 两种模型。
 
+## 实验配置
+
+配置文件名、`config.name`、`train.experiment_group` 和输出目录统一按版本命名，训练超参数沿用各版本原设置。
+
+| 配置 | 实验内容 | 输出目录 |
+| --- | --- | --- |
+| `configs/gpm_surface_v1.yaml` | 原默认实验，100 轮、峰值学习率 2e-4 | `outputs/gpm_surface_v1` |
+| `configs/gpm_surface_v2.yaml` | 学习率 1e-4、早停与逐轮诊断 | `outputs/gpm_surface_v2` |
+| `configs/gpm_surface_v3.yaml` | 固定雨强权重、25 轮调度 | `outputs/gpm_surface_v3` |
+| `configs/gpm_surface_v4.yaml` | 区域耦合、多时效解码、Hann 拼接 | `outputs/gpm_surface_v4` |
+
+命令行未指定 `--config` 时使用 v1。已有历史输出目录同步改为对应版本名，checkpoint 内的原始实验配置保留作为历史记录。
+
 ## 数据
 
 使用已经处理好的 `fy3ggpm_surface_3h_l1only_0p1_v3` 数据集，包含 `source_manifest.json`、`statistics/` 和 NPY shards。每个样本输入为 `[3,43,64,64]`，预测目标为 `[3,1,64,64]`。
@@ -26,16 +39,16 @@ python -m pip install -e .
 
 ```bash
 # 真实数据 CPU 单样本预检
-python scripts/preflight.py --config configs/simvpv2_zone_coupled_v2.yaml --data-root /path/to/FY3G_after
+python scripts/preflight.py --config configs/gpm_surface_v4.yaml --data-root /path/to/FY3G_after
 
 # 从头训练新版 SimVPv2
-python scripts/train.py --config configs/simvpv2_zone_coupled_v2.yaml --data-root /path/to/FY3G_after
+python scripts/train.py --config configs/gpm_surface_v4.yaml --data-root /path/to/FY3G_after
 
 # 恢复同一次实验
-python scripts/train.py --config configs/simvpv2_zone_coupled_v2.yaml --data-root /path/to/FY3G_after --resume outputs/gpm_surface_zone_coupled_v2/checkpoints/last_resume.pt
+python scripts/train.py --config configs/gpm_surface_v4.yaml --data-root /path/to/FY3G_after --resume outputs/gpm_surface_v4/checkpoints/last_resume.pt
 
 # 最终测试与可视化，使用验证阶段冻结的阈值
-python scripts/finalize.py --config configs/simvpv2_zone_coupled_v2.yaml --data-root /path/to/FY3G_after --cases 3
+python scripts/finalize.py --config configs/gpm_surface_v4.yaml --data-root /path/to/FY3G_after --cases 3
 
 # 测试
 python run_tests.py

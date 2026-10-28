@@ -17,7 +17,7 @@ E:/2026Code/FY3G_GPM_V2/standalone_statistics.py
 E:/2026Code/FY3G_GPM_V2/losses/gpm_loss.py
 E:/2026Code/FY3G_GPM_V2/trainers/gpm_trainer.py
 E:/2026Code/FY3G_GPM_V2/trainers/gpm_pipeline.py
-E:/2026Code/FY3G_GPM_V2/configs/simvpv2_fixed_weights_short_schedule.yaml
+E:/2026Code/FY3G_GPM_V2/configs/gpm_surface_v3.yaml
 ```
 
 ---
@@ -43,7 +43,7 @@ scp E:/2026Code/FY3G_GPM_V2/trainers/gpm_trainer.py \
 scp E:/2026Code/FY3G_GPM_V2/trainers/gpm_pipeline.py \
     root@9dgn1jcvuri37-0:/lixj/pyx/FY3G_GPM_V2/trainers/
 
-scp E:/2026Code/FY3G_GPM_V2/configs/simvpv2_fixed_weights_short_schedule.yaml \
+scp E:/2026Code/FY3G_GPM_V2/configs/gpm_surface_v3.yaml \
     root@9dgn1jcvuri37-0:/lixj/pyx/FY3G_GPM_V2/configs/
 ```
 
@@ -91,7 +91,7 @@ python standalone_statistics.py /lixj/pyx/dataset/FY3G_after
 
 ```bash
 cd /lixj/pyx/FY3G_GPM_V2
-python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+python scripts/train.py --config configs/gpm_surface_v3.yaml
 ```
 
 ---
@@ -100,10 +100,10 @@ python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.ya
 
 ```bash
 # 实时查看日志
-tail -f outputs/gpm_surface_fixed_weights_short_schedule/training.log
+tail -f outputs/gpm_surface_v3/training.log
 
 # 查看训练摘要
-cat outputs/gpm_surface_fixed_weights_short_schedule/training_summary.json
+cat outputs/gpm_surface_v3/training_summary.json
 ```
 
 ---
@@ -129,7 +129,7 @@ cat outputs/gpm_surface_fixed_weights_short_schedule/training_summary.json
 ### 训练中监控
 ```bash
 # 查看每轮的CSI指标
-grep "CSI by threshold" outputs/gpm_surface_fixed_weights_short_schedule/training.log
+grep "CSI by threshold" outputs/gpm_surface_v3/training.log
 ```
 
 ### 训练后对比

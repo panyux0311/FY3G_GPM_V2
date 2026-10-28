@@ -1,5 +1,5 @@
 config:
-  name: gpm_surface_lr1e4_earlystop
+  name: gpm_surface_v1
 
 data:
   dataset_root: /lixj/pyx/dataset/FY3G_after
@@ -28,14 +28,14 @@ model:
   simvpv2_drop_path: 0.0
 
 train:
-  experiment_group: simvpv2_lr1e4_earlystop
+  experiment_group: gpm_surface_v1
   seed: 14
   epochs: 100
   effective_batch_size: 64
   microbatch_size: 64
   num_workers: 2
   prefetch_factor: 1
-  peak_learning_rate: 0.0001
+  peak_learning_rate: 0.0002
   final_learning_rate: 0.000005
   warmup_epochs: 5
   weight_decay: 0.0001
@@ -65,12 +65,4 @@ train:
   threshold_step: 0.01
   threshold_pod_retention: 0.0
   quality_gate_enabled: false
-  early_stopping_enabled: true
-  early_stopping_patience: 10
-  early_stopping_min_delta: 0.001
-  diagnostics_enabled: true
-  diagnostics_train_forecast_times: 8
-  diagnostics_every_epochs: 1
-  diagnostics_probability_threshold: 0.5
-  diagnostics_compare_raw_ema: true
-  output_dir: outputs/gpm_surface_lr1e4_earlystop
+  output_dir: outputs/gpm_surface_v1

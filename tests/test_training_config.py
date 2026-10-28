@@ -8,8 +8,8 @@ from utils.config import TrainConfig, load_config
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT = ROOT / "configs/default.yaml"
-EXPERIMENT = ROOT / "configs/simvpv2_lr1e4_earlystop.yaml"
+DEFAULT = ROOT / "configs/gpm_surface_v1.yaml"
+EXPERIMENT = ROOT / "configs/gpm_surface_v2.yaml"
 
 
 class TestTrainingConfig(unittest.TestCase):
@@ -18,14 +18,14 @@ class TestTrainingConfig(unittest.TestCase):
         experiment = load_config(EXPERIMENT)
 
         self.assertEqual(baseline.name, "gpm_surface_v1")
-        self.assertEqual(experiment.name, "gpm_surface_lr1e4_earlystop")
+        self.assertEqual(experiment.name, "gpm_surface_v2")
         self.assertEqual(baseline.data, experiment.data)
         self.assertEqual(baseline.model, experiment.model)
         self.assertEqual(experiment.model.architecture, "simvpv2")
         self.assertEqual(baseline.train.peak_learning_rate, 0.0002)
         self.assertEqual(experiment.train.peak_learning_rate, 0.0001)
-        self.assertEqual(experiment.train.experiment_group, "simvpv2_lr1e4_earlystop")
-        self.assertEqual(experiment.train.output_dir, "outputs/gpm_surface_lr1e4_earlystop")
+        self.assertEqual(experiment.train.experiment_group, "gpm_surface_v2")
+        self.assertEqual(experiment.train.output_dir, "outputs/gpm_surface_v2")
 
         allowed_changes = {
             "experiment_group", "output_dir", "peak_learning_rate",

@@ -47,7 +47,7 @@ class TestEarlyStopping(unittest.TestCase):
         self.assertEqual(original.state_dict(), restored.state_dict())
 
     def _context(self, start_epoch: int = 1, payload: dict | None = None):
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/default.yaml", overrides=[
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v1.yaml", overrides=[
             "train.epochs=8", "train.effective_batch_size=1", "train.microbatch_size=1",
             "train.disable_tqdm=true", "train.device=cpu", "train.early_stopping_enabled=true",
             "train.early_stopping_patience=2", "train.early_stopping_min_delta=0.001",

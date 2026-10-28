@@ -23,7 +23,7 @@ from utils.config import load_config
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Preflight check")
-    parser.add_argument("--config", default=ROOT / "configs/default.yaml")
+    parser.add_argument("--config", default=ROOT / "configs/gpm_surface_v1.yaml")
     parser.add_argument("--data-root")
     parser.add_argument("--set", dest="overrides", action="extend", nargs="+", default=[])
     args = parser.parse_args()

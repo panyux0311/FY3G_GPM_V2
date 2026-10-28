@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SESSION_NAME="${1:-fy3ggpm_finalize}"
-CONFIG_PATH="${2:-$ROOT_DIR/configs/default.yaml}"
+CONFIG_PATH="${2:-$ROOT_DIR/configs/gpm_surface_v1.yaml}"
 
 if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
     echo "tmux session '$SESSION_NAME' already exists. Attach with: tmux attach -t $SESSION_NAME"

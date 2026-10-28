@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG_PATH="${1:-$ROOT_DIR/configs/default.yaml}"
+CONFIG_PATH="${1:-$ROOT_DIR/configs/gpm_surface_v1.yaml}"
 DATA_ROOT="${2:-$(PYTHONPATH="$ROOT_DIR" python3 -c 'import sys; from utils.config import load_config; print(load_config(sys.argv[1]).data.dataset_root)' "$CONFIG_PATH")}"
 OUTPUT_DIR="${3:-}"
 if [[ -z "$OUTPUT_DIR" ]]; then

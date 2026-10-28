@@ -77,7 +77,7 @@ weight.clamp(0.1, 10.0)
 - 第6轮后出现明显过拟合（训练损失↓，验证损失↑）
 
 #### 实施的改进
-新配置 `simvpv2_fixed_weights_short_schedule.yaml`:
+新配置 `gpm_surface_v3.yaml`:
 ```yaml
 train:
   epochs: 25              # 从100降到25
@@ -168,7 +168,7 @@ python -m processing.statistics /lixj/pyx/dataset/FY3G_after
 ### 2. 启动新实验
 ```bash
 cd E:/2026Code/FY3G_GPM_V2
-python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+python scripts/train.py --config configs/gpm_surface_v3.yaml
 ```
 
 ### 3. 对比验证
@@ -196,7 +196,7 @@ python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.ya
 - ✓ `trainers/gpm_pipeline.py` - 删除diagnostic_subset.json生成
 
 ### 配置和测试
-- ✓ `configs/simvpv2_fixed_weights_short_schedule.yaml` - 新配置
+- ✓ `configs/gpm_surface_v3.yaml` - 新配置
 - ✓ `test_improvements.py` - 验证测试脚本
 
 ---

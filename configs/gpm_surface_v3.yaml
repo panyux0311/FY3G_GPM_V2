@@ -1,5 +1,5 @@
 config:
-  name: gpm_surface_zone_coupled_v2
+  name: gpm_surface_v3
 
 data:
   dataset_root: /lixj/pyx/dataset/FY3G_after
@@ -26,15 +26,9 @@ model:
   simvpv2_temporal_layers: 4
   simvpv2_mlp_ratio: 4.0
   simvpv2_drop_path: 0.0
-  # Preserve all three latent forecast planes and mask-aware input skips.
-  simvpv2_multi_lead: true
-  exceedance_head_enabled: true
-  rain_gate_mode: expected_log
-  patch_blend_mode: hann
-  patch_blend_min_weight: 0.05
 
 train:
-  experiment_group: simvpv2_zone_coupled_v2
+  experiment_group: gpm_surface_v3
   seed: 14
   # Adjusted: Short cosine schedule matching actual training duration
   epochs: 25
@@ -67,15 +61,6 @@ train:
   device: cuda
   amp_dtype: bfloat16
   validation_far_max: 0.90
-  validation_far_max_by_zone: [0.75, 0.70, 0.55]
-  zone_loss_weights: [1.0, 0.7, 0.05]
-  expected_amount_weight: 0.25
-  dry_probability_weighted: true
-  exceedance_positive_weighting: true
-  exceedance_positive_weight_cap: 25.0
-  primary_selection_domain: observable
-  # Train only: scan processed targets once, keep all covered/rainy patches.
-  uncovered_patch_keep_ratio: 0.25
   threshold_min: 0.05
   threshold_max: 0.99
   threshold_step: 0.01
@@ -93,4 +78,4 @@ train:
   # Derive weights at startup from the existing statistics/group_count; do not scan the dataset.
   intensity_weight_strategy: sqrt_inverse_frequency_v1
   save_best_by_metrics: ["csi_0.1", "csi_2", "csi_5"]
-  output_dir: outputs/gpm_surface_zone_coupled_v2
+  output_dir: outputs/gpm_surface_v3

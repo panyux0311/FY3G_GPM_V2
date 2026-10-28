@@ -58,7 +58,7 @@ class TestTrainingEpochReporting(unittest.TestCase):
                 check_output_dir_safety(directory)
 
     def test_every_epoch_validates_logs_and_records_metrics(self) -> None:
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/default.yaml", overrides=[
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v1.yaml", overrides=[
             "train.epochs=2", "train.effective_batch_size=1", "train.microbatch_size=1",
             "train.disable_tqdm=true", "train.device=cpu",
         ])

@@ -27,7 +27,7 @@ from visualization.gpm import plot_surface_leads
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Finalize GPM training run")
-    parser.add_argument("--config", default=ROOT / "configs/default.yaml")
+    parser.add_argument("--config", default=ROOT / "configs/gpm_surface_v1.yaml")
     parser.add_argument("--checkpoint", help="Path to checkpoint (default: best_balanced_inference.pt)")
     parser.add_argument("--data-root")
     parser.add_argument("--output-dir")

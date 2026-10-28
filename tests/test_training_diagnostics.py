@@ -48,7 +48,7 @@ class _MemoryDataset(torch.utils.data.Dataset):
 
 class TestTrainingDiagnostics(unittest.TestCase):
     def test_frequency_controls_fixed_metrics_and_extra_evaluations(self):
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/simvpv2_lr1e4_earlystop.yaml", overrides=[
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v2.yaml", overrides=[
             "train.epochs=4", "train.effective_batch_size=1", "train.microbatch_size=1",
             "train.disable_tqdm=true", "train.device=cpu", "train.diagnostics_every_epochs=3",
         ])
@@ -99,7 +99,7 @@ class TestTrainingDiagnostics(unittest.TestCase):
             self.assertIs(call.kwargs["criterion"], context.criterion)
 
     def test_real_model_loss_evaluation_and_checkpoint_flow(self):
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/simvpv2_lr1e4_earlystop.yaml", overrides=[
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v2.yaml", overrides=[
             "train.epochs=2", "train.effective_batch_size=2", "train.microbatch_size=2",
             "train.device=cpu", "train.disable_tqdm=true",
             "model.simvpv2_hidden_spatial=8", "model.simvpv2_hidden_temporal=16",

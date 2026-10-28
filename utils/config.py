@@ -49,7 +49,7 @@ class ModelConfig:
 
 @dataclass
 class TrainConfig:
-    experiment_group: str = "improved_240"
+    experiment_group: str = "gpm_surface_v1"
     seed: int = 14
     epochs: int = 100
     effective_batch_size: int = 64

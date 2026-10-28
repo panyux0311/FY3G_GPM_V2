@@ -6,29 +6,29 @@
 
 工程规范请参阅 [AGENT.md](AGENT.md)。最新改进方案的实现、完整训练流程及启动命令见 [区域感知多时效训练说明](zone_coupled_v2.md)。
 
-新增 `configs/simvpv2_zone_coupled_v2.yaml`，启用区域损失权重、概率/雨强耦合、独立强雨头、SimVPv2 多时效解码、Hann 拼接、分区域 FAR 上限和可观测区选模。使用独立输出目录 `outputs/gpm_surface_zone_coupled_v2`，从头训练：
+新增 `configs/gpm_surface_v4.yaml`，启用区域损失权重、概率/雨强耦合、独立强雨头、SimVPv2 多时效解码、Hann 拼接、分区域 FAR 上限和可观测区选模。使用独立输出目录 `outputs/gpm_surface_v4`，从头训练：
 
 ```bash
-python scripts/train.py --config configs/simvpv2_zone_coupled_v2.yaml
+python scripts/train.py --config configs/gpm_surface_v4.yaml
 ```
 
 训练记录以当前代码的 `metrics.json` 和 checkpoint 为准；下文旧版本提及的独立 `history.json`、`diagnostic_subset.json` 已分别合并到 `metrics.json` 与 checkpoint 内。新实验用 observable CSI 选模，旧配置继续用全区域宏平均。
 
 ## 快速使用
 
-`configs/default.yaml` 保留当前 `gpm_surface_v1` 实验及原有训练超参数；模型可在其 `model.architecture` 中选择。`configs/simvpv2_lr1e4_earlystop.yaml` 是独立的 SimVPv2 对照实验配置，仅将峰值学习率降至 `0.0001`，并开启早停与逐轮诊断，结果写入 `outputs/gpm_surface_lr1e4_earlystop`，不会覆盖原实验。
+`configs/gpm_surface_v1.yaml` 保留当前 `gpm_surface_v1` 实验及原有训练超参数；模型可在其 `model.architecture` 中选择。`configs/gpm_surface_v2.yaml` 是独立的 SimVPv2 对照实验配置，仅将峰值学习率降至 `0.0001`，并开启早停与逐轮诊断，结果写入 `outputs/gpm_surface_v2`，不会覆盖原实验。
 
 ### 1. CPU 快速预检
 ```bash
-python scripts/preflight.py --config configs/default.yaml
+python scripts/preflight.py --config configs/gpm_surface_v1.yaml
 ```
 
 ### 2. 启动训练
 ```bash
-python scripts/train.py --config configs/default.yaml
+python scripts/train.py --config configs/gpm_surface_v1.yaml
 
 # 从头开始运行学习率 1e-4、早停和诊断对照实验
-python scripts/train.py --config configs/simvpv2_lr1e4_earlystop.yaml
+python scripts/train.py --config configs/gpm_surface_v2.yaml
 ```
 
 训练时显示样本索引、epoch、batch 和验证进度条。每个 epoch 都执行验证，并将训练损失、学习率和验证指标打印到终端及 `training.log`。`history.json` 记录 `train_losses`、`validation_loss`、`validation_losses`、`validation_by_lead_target_zone` 和 `diagnostics`；早停判断写入日志，状态写入 `last_resume.pt`。Shell 启动脚本另将终端输出保存到 `console.log`。如需关闭进度条，可设置环境变量 `TQDM_DISABLE=1`。
@@ -45,10 +45,10 @@ python scripts/train.py --config configs/simvpv2_lr1e4_earlystop.yaml
 
 ### 3. 收尾评估与归档
 ```bash
-python scripts/finalize.py --config configs/default.yaml
+python scripts/finalize.py --config configs/gpm_surface_v1.yaml
 
 # 对照实验完成后使用其自身配置与 checkpoint
-python scripts/finalize.py --config configs/simvpv2_lr1e4_earlystop.yaml
+python scripts/finalize.py --config configs/gpm_surface_v2.yaml
 ```
 
 评估和收尾时使用与该次训练相同的配置及对应 checkpoint。两个模型共享降水分类、雨强回归和阈值接口；checkpoint 会校验模型类型。

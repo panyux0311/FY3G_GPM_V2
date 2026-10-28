@@ -17,7 +17,7 @@ E:/2026Code/fy3g_gpm_process/processing/statistics.py
 E:/2026Code/FY3G_GPM_V2/losses/gpm_loss.py
 E:/2026Code/FY3G_GPM_V2/trainers/gpm_trainer.py
 E:/2026Code/FY3G_GPM_V2/trainers/gpm_pipeline.py
-E:/2026Code/FY3G_GPM_V2/configs/simvpv2_fixed_weights_short_schedule.yaml
+E:/2026Code/FY3G_GPM_V2/configs/gpm_surface_v3.yaml
 ```
 
 ### 步骤2：上传到服务器
@@ -39,7 +39,7 @@ scp E:/2026Code/FY3G_GPM_V2/trainers/gpm_trainer.py \
 scp E:/2026Code/FY3G_GPM_V2/trainers/gpm_pipeline.py \
     root@your-server:/lixj/pyx/FY3G_GPM_V2/trainers/
 
-scp E:/2026Code/FY3G_GPM_V2/configs/simvpv2_fixed_weights_short_schedule.yaml \
+scp E:/2026Code/FY3G_GPM_V2/configs/gpm_surface_v3.yaml \
     root@your-server:/lixj/pyx/FY3G_GPM_V2/configs/
 ```
 
@@ -65,7 +65,7 @@ python processing/statistics.py /lixj/pyx/dataset/FY3G_after
 
 ```bash
 cd /lixj/pyx/FY3G_GPM_V2
-python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+python scripts/train.py --config configs/gpm_surface_v3.yaml
 ```
 
 ---

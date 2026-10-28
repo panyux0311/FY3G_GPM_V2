@@ -172,7 +172,7 @@ self.logger.info("Fixed train diagnostic subset: %d forecast times, %d patches",
 
 ### 5. 新增文件
 
-#### configs/simvpv2_fixed_weights_short_schedule.yaml
+#### configs/gpm_surface_v3.yaml
 新的训练配置，包含所有改进：
 - `epochs: 25`（短周期）
 - `diagnostics_every_epochs: 5`（减少开销）
@@ -190,7 +190,7 @@ self.logger.info("Fixed train diagnostic subset: %d forecast times, %d patches",
 
 ### 基线实验输出
 ```
-outputs/gpm_surface_lr1e4_earlystop/
+outputs/gpm_surface_v2/
 ├── diagnostic_subset.json      (462 B - 已删除)
 ├── history.json                (1.1 MB - 冗余)
 ├── run_status.json             (300 KB - 冗余)
@@ -199,7 +199,7 @@ outputs/gpm_surface_lr1e4_earlystop/
 
 ### 新实验输出
 ```
-outputs/gpm_surface_fixed_weights_short_schedule/
+outputs/gpm_surface_v3/
 ├── training_summary.json       (新增 - 精简摘要)
 ├── history.json                (精简 - 只含核心指标)
 ├── training.log                (完整日志)
@@ -261,7 +261,7 @@ All tests passed!
 - [ ] **Step 2**: 运行新实验
   ```bash
   cd E:/2026Code/FY3G_GPM_V2
-  python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+  python scripts/train.py --config configs/gpm_surface_v3.yaml
   ```
 
 - [ ] **Step 3**: 对比分析
@@ -324,7 +324,7 @@ All tests passed!
 4. `FY3G_GPM_V2/trainers/gpm_pipeline.py` - 删除diagnostic输出
 
 ### 新增的文件
-1. `FY3G_GPM_V2/configs/simvpv2_fixed_weights_short_schedule.yaml` - 新配置
+1. `FY3G_GPM_V2/configs/gpm_surface_v3.yaml` - 新配置
 2. `FY3G_GPM_V2/test_improvements.py` - 测试脚本
 3. `FY3G_GPM_V2/docs/claude/IMPROVEMENTS_SUMMARY.md` - 改进总结
 4. `FY3G_GPM_V2/docs/claude/QUICK_START.md` - 快速指南

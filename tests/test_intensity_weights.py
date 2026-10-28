@@ -43,7 +43,7 @@ class TestIntensityWeights(unittest.TestCase):
             derive_intensity_weights(stats)
 
     def test_new_config_loads(self):
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/simvpv2_fixed_weights_short_schedule.yaml")
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v3.yaml")
         self.assertEqual(config.train.intensity_weight_strategy, "sqrt_inverse_frequency_v1")
         self.assertEqual(config.train.save_best_by_metrics, ["csi_0.1", "csi_2", "csi_5"])
         self.assertEqual(config.train.epochs, 25)

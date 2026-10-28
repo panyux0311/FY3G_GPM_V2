@@ -31,7 +31,7 @@ from utils.config import ModelConfig, load_config
 from utils.rain_gate import gate_rain_numpy, gate_rain_torch
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG = ROOT / "configs/simvpv2_zone_coupled_v2.yaml"
+CONFIG = ROOT / "configs/gpm_surface_v4.yaml"
 
 
 def tiny_config():
@@ -64,7 +64,7 @@ class TestZoneConfig(unittest.TestCase):
         self.assertEqual(config.train.epochs, 25)
         self.assertEqual(config.train.seed, 14)
         self.assertTrue(config.model.simvpv2_multi_lead)
-        old = load_config(ROOT / "configs/simvpv2_fixed_weights_short_schedule.yaml")
+        old = load_config(ROOT / "configs/gpm_surface_v3.yaml")
         self.assertFalse(old.model.simvpv2_multi_lead)
         self.assertFalse(old.model.exceedance_head_enabled)
         self.assertEqual(old.train.zone_loss_weights, [1, 1, 1])

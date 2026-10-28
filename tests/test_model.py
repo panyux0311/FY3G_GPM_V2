@@ -40,7 +40,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(tuple(model.occurrence_thresholds_by_zone.shape), (3, 1, 3))
 
     def test_simvpv2_config_and_loss_backward(self) -> None:
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/default.yaml")
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v1.yaml")
         self.assertEqual(config.model.architecture, "simvpv2")
         self.assertEqual(config.train.output_dir, "outputs/gpm_surface_v1")
         self.assertEqual(config.name, "gpm_surface_v1")
@@ -75,12 +75,12 @@ class TestModel(unittest.TestCase):
     def test_simvpv2_rejects_invalid_spatial_layers(self) -> None:
         root = Path(__file__).resolve().parents[1]
         with self.assertRaisesRegex(ValueError, "spatial_layers"):
-            load_config(root / "configs/default.yaml", overrides=[
+            load_config(root / "configs/gpm_surface_v1.yaml", overrides=[
                 "model.architecture=simvpv2", "model.simvpv2_spatial_layers=3",
             ])
 
     def test_default_config_matches_server_run(self) -> None:
-        config = load_config(Path(__file__).resolve().parents[1] / "configs/default.yaml")
+        config = load_config(Path(__file__).resolve().parents[1] / "configs/gpm_surface_v1.yaml")
         self.assertEqual(config.name, "gpm_surface_v1")
         self.assertEqual(config.data.dataset_root, "/lixj/pyx/dataset/FY3G_after")
         self.assertEqual(config.model.architecture, "simvpv2")

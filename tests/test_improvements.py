@@ -61,7 +61,7 @@ def test_config_changes():
     print("Testing New Configuration")
     print("=" * 60)
 
-    config_path = ROOT / "configs/simvpv2_fixed_weights_short_schedule.yaml"
+    config_path = ROOT / "configs/gpm_surface_v3.yaml"
     if not config_path.exists():
         print(f"[FAIL] Config file not found: {config_path}")
         return False
@@ -155,7 +155,7 @@ def main():
         print("\nNext steps:")
         print("1. Regenerate target statistics with fixed weight calculation")
         print("2. Run training with new config:")
-        print("   python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml")
+        print("   python scripts/train.py --config configs/gpm_surface_v3.yaml")
         print("3. Compare results with baseline experiment")
 
     return 0 if all_passed else 1

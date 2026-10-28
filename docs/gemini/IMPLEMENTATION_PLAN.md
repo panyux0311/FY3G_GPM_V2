@@ -1,6 +1,6 @@
 # FY3G_GPM_V2 模型训练与评估改进计划
 
-基于对三次历史实验（`gpm_surface_v1`、`gpm_surface_lr1e4_earlystop`、`gpm_surface_fixed_weights_short_schedule`）及可视化结果的诊断，本计划在不改变底层数据集契约（`fy3ggpm_surface_3h_l1only_0p1_v3`）的前提下，分三个阶段解决**未覆盖区梯度污染、双头解耦导致 MAE 翻倍、+1h~+3h 预测场空间冻结、64×64 拼接断层、以及评估选模口径失真**五大核心问题。
+基于对三次历史实验（`gpm_surface_v1`、`gpm_surface_v2`、`gpm_surface_v3`）及可视化结果的诊断，本计划在不改变底层数据集契约（`fy3ggpm_surface_3h_l1only_0p1_v3`）的前提下，分三个阶段解决**未覆盖区梯度污染、双头解耦导致 MAE 翻倍、+1h~+3h 预测场空间冻结、64×64 拼接断层、以及评估选模口径失真**五大核心问题。
 
 ```mermaid
 flowchart TD

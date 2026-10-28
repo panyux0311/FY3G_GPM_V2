@@ -24,7 +24,7 @@ from utils.config import load_config
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate checkpoint")
-    parser.add_argument("--config", default=ROOT / "configs/default.yaml")
+    parser.add_argument("--config", default=ROOT / "configs/gpm_surface_v1.yaml")
     parser.add_argument("--checkpoint", required=True, help="Path to checkpoint .pt")
     parser.add_argument("--split", choices=("val", "test"), default="test")
     parser.add_argument("--data-root")

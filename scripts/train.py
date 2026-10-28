@@ -17,7 +17,7 @@ from utils.config import load_config
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train FY-3G GPM Model")
-    parser.add_argument("--config", default=ROOT / "configs/default.yaml", help="Path to YAML config")
+    parser.add_argument("--config", default=ROOT / "configs/gpm_surface_v1.yaml", help="Path to YAML config")
     parser.add_argument("--data-root", help="Override dataset root path")
     parser.add_argument("--output-dir", help="Override output directory")
     parser.add_argument("--resume", help="Path to checkpoint to resume training from")

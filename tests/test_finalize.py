@@ -35,7 +35,7 @@ class TestFinalize(unittest.TestCase):
             project = Path(tmpdir) / "project"
             output = project / "outputs/gpm"
             output.mkdir(parents=True)
-            config = project / "configs/default.yaml"
+            config = project / "configs/gpm_surface_v1.yaml"
             config.parent.mkdir(parents=True)
             config.write_text("model: {}\n", encoding="utf-8")
             (output / "eval.json").write_text(json.dumps({"csi": 0.5}), encoding="utf-8")

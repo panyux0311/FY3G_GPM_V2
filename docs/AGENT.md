@@ -2,7 +2,7 @@
 
 本指南旨在为后续接手维护、迭代或在该代码库上执行任务的 AI Agent 与开发人员提供统一的系统全景、设计决策、工程规范及避坑准则。
 
-最新配置与训练流程见 [zone_coupled_v2.md](zone_coupled_v2.md)。`simvpv2_zone_coupled_v2.yaml` 从头训练多时效版本；旧 YAML 默认保持旧结构及评估口径。当前训练只写精简 `metrics.json`，完整指标和诊断子集清单保存在 checkpoint，分组和子损失写入日志。下文旧版本的 `history.json`、`diagnostic_subset.json` 不再单独生成。新增选模区域、门控和拼接方式必须在训练/评估/finalize 中保持一致；测试集禁止搜索阈值和背景下采样。
+最新配置与训练流程见 [zone_coupled_v2.md](zone_coupled_v2.md)。`gpm_surface_v4.yaml` 从头训练多时效版本；旧 YAML 默认保持旧结构及评估口径。当前训练只写精简 `metrics.json`，完整指标和诊断子集清单保存在 checkpoint，分组和子损失写入日志。下文旧版本的 `history.json`、`diagnostic_subset.json` 不再单独生成。新增选模区域、门控和拼接方式必须在训练/评估/finalize 中保持一致；测试集禁止搜索阈值和背景下采样。
 
 ---
 
@@ -29,8 +29,10 @@
 ```text
 FY3G_GPM_V2/
 ├── configs/               # 实验配置文件
-│   ├── default.yaml       # 现有 gpm_surface_v1 实验；model.architecture 选择模型
-│   └── simvpv2_lr1e4_earlystop.yaml # 独立的低学习率、早停和诊断对照实验
+│   ├── gpm_surface_v1.yaml # 原默认实验，100 轮、峰值学习率 2e-4
+│   ├── gpm_surface_v2.yaml # 学习率 1e-4、早停与逐轮诊断
+│   ├── gpm_surface_v3.yaml # 固定雨强权重、25 轮调度
+│   └── gpm_surface_v4.yaml # 区域耦合、多时效解码与 Hann 拼接
 ├── datasets/              # 数据加载与张量组装
 │   ├── gpm_dataset.py     # 支持 mmap 内存映射读取、显式关闭句柄的 PyTorch Dataset
 │   ├── gpm_inputs.py      # 43 通道模型输入特征标准化与拼装
@@ -131,7 +133,7 @@ FY3G_GPM_V2/
 - `run_tests.py` 基于 Python 标准库 `unittest` 驱动 `tests/` 目录下的所有测试用例，**无任何额外依赖**，可在任何纯 Python 环境下无缝执行。
 
 ### 4.4 低学习率对照实验的早停与诊断
-- `configs/simvpv2_lr1e4_earlystop.yaml` 复制了默认实验配置，峰值学习率改为 `1e-4`，实验名、分组和输出目录独立；其余训练算法超参数保持不变。该实验应从头训练，不要恢复旧实验约 75 轮的 checkpoint。
+- `configs/gpm_surface_v2.yaml` 复制了默认实验配置，峰值学习率改为 `1e-4`，实验名、分组和输出目录独立；其余训练算法超参数保持不变。该实验应从头训练，不要恢复旧实验约 75 轮的 checkpoint。
 - 启动时从训练集固定选取 8 个均匀分布的完整预报时刻，保存到输出目录的 `diagnostic_subset.json`；后续诊断轮次复用这 8 个时刻。训练及验证诊断使用 EMA 模型，另计算验证集 raw 模型对照。`diagnostics` 中的 `train_ema`、`val_ema`、`val_raw` 均使用固定降水概率阈值 `0.5`，记录分组 CC、CSI 等指标。
 - `history.json` 记录 `train_losses`、`validation_loss`、`validation_losses`、`validation_by_lead_target_zone`、`diagnostics`。`validation_loss` 是验证 patch 上按当前 epoch 相同损失权重计算的损失；早停依据验证 CSI，只决定何时结束训练，不改变 warmup/cosine 学习率调度。早停判断写入日志，状态随 `last_resume.pt` 保存。测试集仅在最终评估阶段使用。
 - raw/EMA 对照增加模型前向开销，可关闭 `train.diagnostics_enabled`，或增大 `train.diagnostics_every_epochs` 降低诊断频率。
@@ -149,32 +151,32 @@ FY3G_GPM_V2/
 ### 5.1 本地 CPU 快速预检
 在开展耗时的长周期训练前，先执行轻量级预检以验证环境、模型前向传播及损失函数计算：
 ```bash
-python scripts/preflight.py --config configs/default.yaml
+python scripts/preflight.py --config configs/gpm_surface_v1.yaml
 ```
 
 ### 5.2 启动模型训练 (Linux / Windows)
 ```bash
 python scripts/train.py \
-    --config configs/default.yaml
+    --config configs/gpm_surface_v1.yaml
 ```
 
 ### 5.3 断点续训 (Resume Training)
 ```bash
 python scripts/train.py \
-    --config configs/default.yaml \
+    --config configs/gpm_surface_v1.yaml \
     --resume "outputs/gpm_surface_v1/checkpoints/last_resume.pt"
 ```
 
 独立对照实验从头运行：
 ```bash
-python scripts/train.py --config configs/simvpv2_lr1e4_earlystop.yaml
+python scripts/train.py --config configs/gpm_surface_v2.yaml
 ```
 
 ### 5.4 结果收尾与归档 (Finalization)
 训练完成后，运行 `finalize.py`。该脚本加载训练阶段选出的阈值，在独立测试集上评测最终指标并绘制强降水个例图：
 ```bash
 python scripts/finalize.py \
-    --config configs/default.yaml \
+    --config configs/gpm_surface_v1.yaml \
     --cases 5
 ```
 

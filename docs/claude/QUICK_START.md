@@ -19,14 +19,14 @@ python -m processing.statistics /lixj/pyx/dataset/FY3G_after
 #### Step 2: 运行新实验
 ```bash
 cd E:/2026Code/FY3G_GPM_V2
-python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.yaml
+python scripts/train.py --config configs/gpm_surface_v3.yaml
 ```
 
 **预期输出文件**:
-- `outputs/gpm_surface_fixed_weights_short_schedule/training_summary.json` - 训练摘要
-- `outputs/gpm_surface_fixed_weights_short_schedule/history.json` - 精简的训练历史
-- `outputs/gpm_surface_fixed_weights_short_schedule/training.log` - 完整日志
-- `outputs/gpm_surface_fixed_weights_short_schedule/checkpoints/`:
+- `outputs/gpm_surface_v3/training_summary.json` - 训练摘要
+- `outputs/gpm_surface_v3/history.json` - 精简的训练历史
+- `outputs/gpm_surface_v3/training.log` - 完整日志
+- `outputs/gpm_surface_v3/checkpoints/`:
   - `best_csi_0.1_inference.pt` - 有雨分类最佳
   - `best_csi_2_inference.pt` - ≥2 mm/h最佳
   - `best_csi_5_inference.pt` - ≥5 mm/h最佳
@@ -43,8 +43,8 @@ python scripts/train.py --config configs/simvpv2_fixed_weights_short_schedule.ya
 cd E:/2026Code/FY3G_GPM_V2
 python -c "
 import json
-baseline = json.load(open('outputs/gpm_surface_lr1e4_earlystop/training_summary.json'))
-new = json.load(open('outputs/gpm_surface_fixed_weights_short_schedule/training_summary.json'))
+baseline = json.load(open('outputs/gpm_surface_v2/training_summary.json'))
+new = json.load(open('outputs/gpm_surface_v3/training_summary.json'))
 
 print('=== CSI@0.1 (分类) ===')
 print(f'基线: {baseline[\"best_csi_0.1\"]:.4f}')
@@ -143,13 +143,13 @@ ls -lh /lixj/pyx/dataset/FY3G_after/target_statistics.json
 
 ```bash
 # 实时监控验证CSI
-tail -f outputs/gpm_surface_fixed_weights_short_schedule/training.log | grep "val_CSI"
+tail -f outputs/gpm_surface_v3/training.log | grep "val_CSI"
 
 # 查看学习率变化
-grep "learning_rate" outputs/gpm_surface_fixed_weights_short_schedule/training.log
+grep "learning_rate" outputs/gpm_surface_v3/training.log
 
 # 检查强雨指标
-grep "CSI@2\|CSI@5" outputs/gpm_surface_fixed_weights_short_schedule/training.log
+grep "CSI@2\|CSI@5" outputs/gpm_surface_v3/training.log
 ```
 
 ---

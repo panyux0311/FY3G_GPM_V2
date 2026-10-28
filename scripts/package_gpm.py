@@ -48,7 +48,7 @@ def main() -> None:
     with tarfile.open(ARCHIVE, "r:gz") as tar:
         names = tar.getnames()
         required = {
-            "scripts/train.py", "configs/default.yaml",
+            "scripts/train.py", "configs/gpm_surface_v1.yaml",
             "models/UNetStandard.py", "models/SimVPv2.py", "models/precipitation.py", "models/factory.py",
         }
         if not required.issubset(names):
