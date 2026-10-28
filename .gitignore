@@ -1,0 +1,66 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+env/
+*.egg-info/
+/build/
+/dist/
+
+# Training outputs, datasets, weights, and deployment archives
+/outputs/
+/output/
+/data/
+/dataset/
+/FY3G_after/
+/FY3G_after_cache/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.npy
+*.npz
+*.h5
+*.hdf
+*.hdf5
+*.HDF
+*.nc
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.log
+
+# Local diagnostics and authoring scratch files
+/.tmp-tests/
+/.review_tmp/
+/.codex-finalizer/
+*.tmp
+*.temp
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account*.json
+/.aws/
+/.codex/
+/.agents/
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*

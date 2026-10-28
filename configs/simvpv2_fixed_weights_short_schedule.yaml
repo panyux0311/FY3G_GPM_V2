@@ -1,0 +1,81 @@
+config:
+  name: gpm_surface_fixed_weights_short_schedule
+
+data:
+  dataset_root: /lixj/pyx/dataset/FY3G_after
+  dataset_version: fy3ggpm_surface_3h_l1only_0p1_v3
+  grid_degrees: 0.1
+  input_levels_km: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  patch_size: 64
+
+model:
+  architecture: simvpv2
+  input_channels: 43
+  input_steps: 3
+  forecast_leads: 3
+  target_levels: 1
+  output_targets: 3
+  distillation_channels: 48
+  base_width: 64
+  strong_branch_enabled: false
+  parameter_min: 30000000
+  parameter_max: 40000000
+  simvpv2_hidden_spatial: 32
+  simvpv2_hidden_temporal: 128
+  simvpv2_spatial_layers: 4
+  simvpv2_temporal_layers: 4
+  simvpv2_mlp_ratio: 4.0
+  simvpv2_drop_path: 0.0
+
+train:
+  experiment_group: simvpv2_fixed_weights_short_schedule
+  seed: 14
+  # Adjusted: Short cosine schedule matching actual training duration
+  epochs: 25
+  warmup_epochs: 5
+  effective_batch_size: 64
+  microbatch_size: 64
+  num_workers: 2
+  prefetch_factor: 1
+  peak_learning_rate: 0.0001
+  final_learning_rate: 0.000005
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  rain_threshold_mm_h: 0.1
+  positive_weight_cap: 20
+  focal_weight: 1.0
+  soft_csi_weight: 0.25
+  neighborhood_fss_weight: 0.10
+  calibration_bce_weight: 0.02
+  rain_amount_weight: 1.0
+  dry_amount_weight: 0.05
+  exceedance_weight: 0.20
+  exceedance_threshold_weights: [0.40, 0.35, 0.25]
+  strong_fss_weight: 0.0
+  lead_weights: [1.0, 1.0, 1.0]
+  hard_negative_fraction: 0.02
+  hard_negative_weight: 0.02
+  hard_negative_ramp_start_epoch: 21
+  hard_negative_ramp_end_epoch: 25
+  ema_decay: 0.999
+  device: cuda
+  amp_dtype: bfloat16
+  validation_far_max: 0.90
+  threshold_min: 0.05
+  threshold_max: 0.99
+  threshold_step: 0.01
+  threshold_pod_retention: 0.0
+  quality_gate_enabled: false
+  early_stopping_enabled: true
+  early_stopping_patience: 10
+  early_stopping_min_delta: 0.001
+  diagnostics_enabled: true
+  diagnostics_train_forecast_times: 8
+  # Reduced: Only run full diagnostics every 5 epochs to save time
+  diagnostics_every_epochs: 5
+  diagnostics_probability_threshold: 0.5
+  diagnostics_compare_raw_ema: true
+  # Derive weights at startup from the existing statistics/group_count; do not scan the dataset.
+  intensity_weight_strategy: sqrt_inverse_frequency_v1
+  save_best_by_metrics: ["csi_0.1", "csi_2", "csi_5"]
+  output_dir: outputs/gpm_surface_fixed_weights_short_schedule

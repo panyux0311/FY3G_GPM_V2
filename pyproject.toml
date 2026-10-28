@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fy3g-gpm-v2"
+version = "2.0.0"
+description = "FY-3G PMR and GPM IMERG surface precipitation forecasting model training and evaluation"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "PyYAML>=6.0",
+    "torch>=2.1",
+    "matplotlib>=3.7",
+    "scipy>=1.10.0",
+    "tqdm>=4.67.1,<5",
+]
+
+[tool.setuptools]
+py-modules = ["schema"]
+
+[tool.setuptools.packages.find]
+include = [
+    "datasets*",
+    "models*",
+    "trainers*",
+    "losses*",
+    "metrics*",
+    "visualization*",
+    "utils*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
